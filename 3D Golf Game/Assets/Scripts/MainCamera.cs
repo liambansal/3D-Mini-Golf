@@ -9,10 +9,16 @@ public class MainCamera : MonoBehaviour {
 		yTranslation = 0,
 		zoomSpeed = 10.0f;
 
-	private bool canRotate = false,
-		isMoving = false;
+	private bool canRotate = false;
 
-	private Vector3 offset;
+	private Vector3 offset; // Used to determine the route from the camera to the golf ball.
+
+	/// <summary>
+	/// Sets the offset position between the camera and golf ball.
+	/// </summary>
+	private void Start() {
+		offset = transform.position - golfBall.transform.position;
+	}
 
 	private void FixedUpdate() {
 		// Enables camera rotations while the player is inputting from the mouse.
@@ -22,7 +28,8 @@ public class MainCamera : MonoBehaviour {
 			canRotate = false;
 		}
 
-		if (canRotate && !isMoving) {
+		if (canRotate && (golfBall.GetComponent<Rigidbody>().velocity.magnitude == 0)) { // Golf ball is still.
+			// Checks for change in the mouxe's x/y axis values.
 			if ((Input.GetAxis("Mouse X") > 0) || (Input.GetAxis("Mouse X") < 0)) {
 				xTranslation = (Input.GetAxis("Mouse X") * translationBuffer);
 			}
@@ -33,28 +40,19 @@ public class MainCamera : MonoBehaviour {
 
 			RotateCamera(xTranslation, yTranslation);
 			transform.LookAt(golfBall.transform.position, transform.up);
+			offset = transform.position - golfBall.transform.position; // Sets the new offset position.
+		} else { // Golf ball is moving.
+			MoveCamera();
 		}
 
 		// Check input for zooming in/out
 		if (Input.GetAxis("Mouse ScrollWheel") < 0) {
-			ZoomIn(transform.position);
+			ZoomIn();
 		}
 
 		if (Input.GetAxis("Mouse ScrollWheel") > 0) {
-			ZoomOut(transform.position);
+			ZoomOut();
 		}
-
-		// Tells us if the golf ball is moving and makes the camera follow it.
-		if (golfBall.GetComponent<Rigidbody>().velocity.magnitude > 0) {
-			isMoving = true;
-			MoveCamera();
-		} else {
-			isMoving = false;
-		}
-	}
-
-	private void Update() {
-		offset = transform.position - golfBall.transform.position;
 	}
 
 	/// <summary>
@@ -72,11 +70,11 @@ public class MainCamera : MonoBehaviour {
 	/// </summary>
 	/// <param name="initialPosition"></param>
 	/// <returns></returns>
-	private void ZoomIn(Vector3 initialPosition) {
+	private void ZoomIn() {
 		Vector3 vec1 = (transform.position);
 		Vector3 vec2 = (golfBall.transform.position);
 		Vector3 displacement = vec1 -= vec2;
-		transform.position = initialPosition + (displacement * zoomSpeed * Time.deltaTime);
+		transform.position += (displacement * zoomSpeed * Time.deltaTime);
 	}
 
 	/// <summary>
@@ -84,14 +82,17 @@ public class MainCamera : MonoBehaviour {
 	/// </summary>
 	/// <param name="initialPosition"></param>
 	/// <returns></returns>
-	private void ZoomOut(Vector3 initialPosition) {
+	private void ZoomOut() {
 		Vector3 vec1 = (transform.position);
 		Vector3 vec2 = (golfBall.transform.position);
 		Vector3 displacement = vec1 -= vec2;
-		transform.position = initialPosition - (displacement * zoomSpeed * Time.deltaTime);
+		transform.position += (displacement * zoomSpeed * Time.deltaTime);
 	}
 
+	/// <summary>
+	/// Moves the camera so it follows the golf ball's position.
+	/// </summary>
 	private void MoveCamera() {
-		transform.position = golfBall.transform.position - offset;
+		transform.position = golfBall.transform.position + offset;
 	}
 }
