@@ -12,7 +12,10 @@ public class MainCamera : MonoBehaviour {
 	private bool canRotate = false,
 		isMoving = false;
 
-	private void Update() {
+	private Vector3 offset;
+
+	private void FixedUpdate() {
+		// Enables camera rotations while the player is inputting from the mouse.
 		if (Input.GetMouseButton(0) || Input.GetMouseButton(1)) {
 			canRotate = true;
 		} else {
@@ -32,47 +35,63 @@ public class MainCamera : MonoBehaviour {
 			transform.LookAt(golfBall.transform.position, transform.up);
 		}
 
+		// Check input for zooming in/out
 		if (Input.GetAxis("Mouse ScrollWheel") < 0) {
-			transform.position = ZoomIn(transform.position);
+			ZoomIn(transform.position);
 		}
 
 		if (Input.GetAxis("Mouse ScrollWheel") > 0) {
-			transform.position = ZoomOut(transform.position);
+			ZoomOut(transform.position);
 		}
 
+		// Tells us if the golf ball is moving and makes the camera follow it.
 		if (golfBall.GetComponent<Rigidbody>().velocity.magnitude > 0) {
 			isMoving = true;
-			MoveCamera(transform.position);
+			MoveCamera();
 		} else {
 			isMoving = false;
 		}
 	}
 
-	private void RotateCamera(float xAxis, float yAxis) {
-		transform.RotateAround(golfBall.transform.position, Vector3.up, xTranslation);
-		transform.RotateAround(golfBall.transform.position, transform.right, -yTranslation);
+	private void Update() {
+		offset = transform.position - golfBall.transform.position;
 	}
 
-	private Vector3 ZoomIn(Vector3 initialPosition) {
-		Vector3 vec1 = (transform.position);
-		Vector3 vec2 = (golfBall.transform.position);
-		Vector3 displacement = vec1 -= vec2;
-		Vector3 newPosition = initialPosition + (displacement * zoomSpeed * Time.deltaTime);
-		return newPosition;
+	/// <summary>
+	/// Rotates the camera around the golf ball gameobject.
+	/// </summary>
+	/// <param name="xAxis"></param>
+	/// <param name="yAxis"></param>
+	private void RotateCamera(float xAngle, float yAngle) {
+		transform.RotateAround(golfBall.transform.position, Vector3.up, xAngle);
+		transform.RotateAround(golfBall.transform.position, transform.right, -yAngle);
 	}
 
-	private Vector3 ZoomOut(Vector3 initialPosition) {
+	/// <summary>
+	/// Moves the camera towards the golf ball gameobject.
+	/// </summary>
+	/// <param name="initialPosition"></param>
+	/// <returns></returns>
+	private void ZoomIn(Vector3 initialPosition) {
 		Vector3 vec1 = (transform.position);
 		Vector3 vec2 = (golfBall.transform.position);
 		Vector3 displacement = vec1 -= vec2;
-		Vector3 newPosition = initialPosition - (displacement * zoomSpeed * Time.deltaTime);
-		return newPosition;
+		transform.position = initialPosition + (displacement * zoomSpeed * Time.deltaTime);
 	}
-	private Vector3 MoveCamera(Vector3 initialPosition) {
+
+	/// <summary>
+	/// Moves the camera away from the golf ball gameobject.
+	/// </summary>
+	/// <param name="initialPosition"></param>
+	/// <returns></returns>
+	private void ZoomOut(Vector3 initialPosition) {
 		Vector3 vec1 = (transform.position);
 		Vector3 vec2 = (golfBall.transform.position);
 		Vector3 displacement = vec1 -= vec2;
-		Vector3 newPosition = initialPosition - (displacement * zoomSpeed * Time.deltaTime);
-		return newPosition;
+		transform.position = initialPosition - (displacement * zoomSpeed * Time.deltaTime);
+	}
+
+	private void MoveCamera() {
+		transform.position = golfBall.transform.position - offset;
 	}
 }
