@@ -2,20 +2,20 @@
 
 public class Controller : MonoBehaviour {
 	[SerializeField]
-	private Material mat = null;
+	private Material defaultMaterial = null;
 
-	private float hitForce = 2, 
-		power = 2, 
-		startTime = 0, 
-		endTime = 0, 
-		minHitForce = 2, 
-		maxHitForce = 40;
+	private float hitForce = 2; // Used in applying a force to move the ball.
+	private float power = 2; // Used to multiply hitForce's value, to exaggerate the result.
+	private float startTime = 0;
+	private float endTime = 0;
+	private float minHitForce = 2;
+	private float maxHitForce = 40;
 
 	private bool moving = false;
 
 	private Rigidbody rigidBody = null;
 
-	private Vector3 direction; // The direction in which the ball will travel.
+	private Vector3 direction = new Vector3(); // The direction in which the ball will travel.
 
 
 	private void Awake() {
@@ -26,7 +26,7 @@ public class Controller : MonoBehaviour {
 		if (rigidBody.velocity.magnitude == 0.0f || (rigidBody.velocity.magnitude < 0.5f)) {
 			rigidBody.velocity = Vector3.zero;
 			moving = false;
-			GetComponent<MeshRenderer>().material = mat;
+			GetComponent<MeshRenderer>().material = defaultMaterial;
 		} else {
 			moving = true;
 			GetComponent<MeshRenderer>().material = null;
