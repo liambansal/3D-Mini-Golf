@@ -53,8 +53,7 @@ public class MainCamera : MonoBehaviour {
 				cameraAnchor.SendMessage("RotateAlongXAxis", xTranslation); // Rotates the cameraAnchor relative to the cameras rotation around the golfBall.
 				ClampCameraPosition();
 				transform.LookAt(golfBall.transform.position, transform.up); // Makes the camera's forward direction point towards the golfBall.
-				ballOffset = transform.position - golfBall.transform.position; // Sets the new offset position.
-				anchorDistanceToGolfBall = Vector3.Distance(cameraAnchor.transform.position, golfBall.transform.position); // Stores new distance between the camera and golfBall.
+				CalculateDistances();
 			}
 
 			if ((Input.GetAxis("Mouse Y") > 0) || (Input.GetAxis("Mouse Y") < 0)) {
@@ -63,8 +62,7 @@ public class MainCamera : MonoBehaviour {
 				cameraAnchor.SendMessage("RotateAlongXAxis", xTranslation); // Rotates the cameraAnchor relative to the cameras rotation around the golfBall.
 				ClampCameraPosition();
 				transform.LookAt(golfBall.transform.position, transform.up); // Makes the camera's forward direction point towards the golfBall.
-				ballOffset = transform.position - golfBall.transform.position; // Sets the new offset position.
-				anchorDistanceToGolfBall = Vector3.Distance(cameraAnchor.transform.position, golfBall.transform.position); // Stores new distance between the camera and golfBall.
+				CalculateDistances();
 			}
 		} else { // Golf ball is moving.
 			MoveCamera();
@@ -75,30 +73,14 @@ public class MainCamera : MonoBehaviour {
 			// TODO: Change logic so there's only one if statement for zooming
 			if (Input.GetAxis("Mouse ScrollWheel") < 0) {
 				transform.position += ZoomIn();
-				cameraAnchor.SendMessage("ZoomIn");
-				ballOffset = transform.position - golfBall.transform.position; // Sets the new offset position.
-				anchorDistanceToGolfBall = Vector3.Distance(cameraAnchor.transform.position, golfBall.transform.position); // Stores new distance between the camera and golfBall.
-				// Finds the maximum possible distance between the camera and 
-				// cameraAnchor before the camera rotates past the golfBall's global y 
-				// axis.
-				maxDistanceToAnchor = Vector3.Distance(transform.position,
-				(new Vector3(golfBall.transform.position.x,
-				golfBall.transform.position.y + anchorDistanceToGolfBall,
-				golfBall.transform.position.z)));
+				cameraAnchor.SendMessage("ZoomIn", zoomSpeed);
+				CalculateDistances();
 			}
 
 			if (Input.GetAxis("Mouse ScrollWheel") > 0) {
 				transform.position -= ZoomIn();
-				cameraAnchor.SendMessage("ZoomOut");
-				ballOffset = transform.position - golfBall.transform.position; // Sets the new offset position.
-				anchorDistanceToGolfBall = Vector3.Distance(cameraAnchor.transform.position, golfBall.transform.position); // Stores new distance between the camera and golfBall.
-				// Finds the maximum possible distance between the camera and 
-				// cameraAnchor before the camera rotates past the golfBall's global y 
-				// axis.
-				maxDistanceToAnchor = Vector3.Distance(transform.position,
-				(new Vector3(golfBall.transform.position.x,
-				golfBall.transform.position.y + anchorDistanceToGolfBall,
-				golfBall.transform.position.z)));
+				cameraAnchor.SendMessage("ZoomOut", zoomSpeed);
+				CalculateDistances();
 			}
 		}
 	}
@@ -133,7 +115,7 @@ public class MainCamera : MonoBehaviour {
 	/// </summary>
 	private void ClampCameraPosition() {
 		if (transform.position.y > cameraAnchor.transform.position.y) {
-			if (Vector3.Distance(transform.position, cameraAnchor.transform.position) >= maxDistanceToAnchor) {
+			if (Vector3.Distance(transform.position, cameraAnchor.transform.position) > maxDistanceToAnchor) {
 				transform.position = new Vector3(golfBall.transform.position.x, 
 					golfBall.transform.position.y + anchorDistanceToGolfBall, 
 					golfBall.transform.position.z);
@@ -143,5 +125,21 @@ public class MainCamera : MonoBehaviour {
 				cameraAnchor.transform.position.y, 
 				cameraAnchor.transform.position.z);
 		}
+	}
+
+	/// <summary>
+	/// Calculates the new camera to golfBall offset, cameraAnchor to golfBall 
+	/// distance and the camera's max possible distance to cameraAnchor.
+	/// </summary>
+	private void CalculateDistances() {
+		ballOffset = transform.position - golfBall.transform.position; // Sets the new offset position.
+		anchorDistanceToGolfBall = Vector3.Distance(cameraAnchor.transform.position, golfBall.transform.position); // Stores new distance between the camera and golfBall.
+		// Finds the maximum possible distance between the camera and 
+		// cameraAnchor before the camera rotates past the golfBall's global y 
+		// axis.
+		maxDistanceToAnchor = Vector3.Distance(cameraAnchor.transform.position,
+		(new Vector3(golfBall.transform.position.x,
+			golfBall.transform.position.y + anchorDistanceToGolfBall,
+			golfBall.transform.position.z)));
 	}
 }

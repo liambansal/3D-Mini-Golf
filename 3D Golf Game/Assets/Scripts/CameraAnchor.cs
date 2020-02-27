@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 
 public class CameraAnchor : MonoBehaviour {
-	private float zoomSpeed = 10.0f;
-
 	private GameObject golfBall = null;
 
 	/// <summary>
@@ -21,7 +19,7 @@ public class CameraAnchor : MonoBehaviour {
 	/// Moves the cameraAnchor towards the golfBall.
 	/// </summary>
 	/// <param name="initialPosition"></param>
-	private void ZoomIn() {
+	private void ZoomIn(float zoomSpeed) {
 		Vector3 vec1 = (transform.position);
 		Vector3 vec2 = (golfBall.transform.position);
 		Vector3 displacement = vec1 -= vec2;
@@ -32,7 +30,7 @@ public class CameraAnchor : MonoBehaviour {
 	/// Moves the cameraAnchor away from the golfBall.
 	/// </summary>
 	/// <param name="initialPosition"></param>
-	private void ZoomOut() {
+	private void ZoomOut(float zoomSpeed) {
 		Vector3 vec1 = (transform.position);
 		Vector3 vec2 = (golfBall.transform.position);
 		Vector3 displacement = vec1 -= vec2;
