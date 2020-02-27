@@ -1,43 +1,65 @@
 ﻿using UnityEngine;
 
 public class CameraAnchor : MonoBehaviour {
+	private float minDistanceToGolfBall = 2.0f;
+	private float maxDistanceToGolfBall = 12.0f;
+
+	private bool canZoom = true;
+
 	private GameObject golfBall = null;
 
 	/// <summary>
-	/// Finds the golfBall object and sets the offset position 
-	/// between the camera anchor and golfBall.
+	/// Finds golfBall in the scene.
 	/// </summary>
 	private void Start() {
 		golfBall = GameObject.Find("Golf Ball");
 	}
 
-	void Update() {
+	void FixedUpdate() {
+		// Makes the gameObject's forward direction face the golfBall.
 		transform.LookAt(golfBall.transform.position, transform.up);
+
+		if (Input.GetMouseButton(0)) {
+			canZoom = false;
+		} else {
+			canZoom = true;
+		}
+
+		// Check input for zooming in/out.
+		if (canZoom) {
+			if (Input.GetAxis("Mouse ScrollWheel") > 0) {
+				if (DistanceToGolfBall() > minDistanceToGolfBall) {
+					transform.position += Zoom();
+				}
+			} else if (Input.GetAxis("Mouse ScrollWheel") < 0) {
+				if (DistanceToGolfBall() < maxDistanceToGolfBall) {
+					transform.position -= Zoom();
+				}
+			}
+		}
 	}
 
 	/// <summary>
-	/// Moves the cameraAnchor towards the golfBall.
+	/// Returns a Vector3 for moving the cameraAnchor towards or away from the 
+	/// golfBall.
 	/// </summary>
-	/// <param name="initialPosition"></param>
-	private void ZoomIn(float zoomSpeed) {
+	private Vector3 Zoom() {
+		float zoomSpeed = 8.0f;
 		Vector3 vec1 = (transform.position);
 		Vector3 vec2 = (golfBall.transform.position);
 		Vector3 displacement = vec1 -= vec2;
-		transform.position += (displacement * zoomSpeed * Time.deltaTime);
+		return displacement * -zoomSpeed * Time.deltaTime;
 	}
 
 	/// <summary>
-	/// Moves the cameraAnchor away from the golfBall.
+	/// Rotates the cameraAnchor around the golfBall's global y axis.
 	/// </summary>
-	/// <param name="initialPosition"></param>
-	private void ZoomOut(float zoomSpeed) {
-		Vector3 vec1 = (transform.position);
-		Vector3 vec2 = (golfBall.transform.position);
-		Vector3 displacement = vec1 -= vec2;
-		transform.position -= (displacement * zoomSpeed * Time.deltaTime);
-	}
-
-	private void RotateAlongXAxis(float xTranslation) {
+	/// <param name="xTranslation"></param>
+	private void RotateAroundGolfBall(float xTranslation) {
 		transform.RotateAround(golfBall.transform.position, Vector3.up, xTranslation);
+	}
+
+	private float DistanceToGolfBall() {
+		return Vector3.Distance(transform.position, golfBall.transform.position);
 	}
 }

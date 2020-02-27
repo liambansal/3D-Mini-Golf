@@ -13,11 +13,13 @@ public class Controller : MonoBehaviour {
 
 	private bool moving = false;
 
-	private Rigidbody rigidBody = null;
-
 	private Vector3 direction = new Vector3(); // The direction in which the ball will travel.
 
+	private Rigidbody rigidBody = null; // The rigidbody of this gameObject.
 
+	/// <summary>
+	/// Gets the rigidbody of this gameObject.
+	/// </summary>
 	private void Awake() {
 		rigidBody = GetComponent<Rigidbody>(); // Get the golf ball's rigidbody
 	}
@@ -48,8 +50,11 @@ public class Controller : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Adds an instant force impulse to the rigidbody of this gameObject 
+	/// that causes it to travel in the main camera's forward direction.
+	/// </summary>
 	private void PuttBall() {
-		Debug.Log(hitForce);
 		rigidBody.AddForce((direction * hitForce), ForceMode.Impulse);
 	}
 }
