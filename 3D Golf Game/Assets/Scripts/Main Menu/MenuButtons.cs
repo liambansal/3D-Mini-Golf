@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuButtons : MonoBehaviour {
 	public void Play() {
-		SceneManager.LoadScene("Test Level", LoadSceneMode.Single);
+		SceneManager.LoadScene("Level 1", LoadSceneMode.Single);
 	}
 
 	public void Options() {

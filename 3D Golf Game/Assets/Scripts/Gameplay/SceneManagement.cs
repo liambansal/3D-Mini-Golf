@@ -21,13 +21,16 @@ public class SceneManagement : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Loads the next scene in the project's build order.
+	/// Loads the next scene in the project's build order unless the last 
+	/// level is loaded, in which case load the main menu.
 	/// </summary>
-	internal void LoadNextScene() {
-		if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings) {
+	public void LoadNextScene() {
+		if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings - 1) {
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
+		} else {
+			SceneManager.LoadScene("Main Menu", LoadSceneMode.Single);
 		}
-    }
+	}
 
 	/// <summary>
 	/// Increases the scoreboard's reference counter and enables it once it has 

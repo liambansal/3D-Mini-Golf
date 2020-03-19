@@ -19,13 +19,16 @@ public class MainCamera : MonoBehaviour {
 	private GameObject cameraAnchor = null;
 
 	/// <summary>
-	/// Finds the golfBall & cameraAnchor gameObjects and makes a call to 
-	/// calculate distances for positioning various gameObjects.
+	/// Finds the golfBall & cameraAnchor gameObjects.
+	/// Calls a method to calculate distances for positioning various 
+	/// gameObjects.
+	/// Makes the camera's forward direction face the golf ball.
 	/// </summary>
 	private void Start() {
 		golfBall = GameObject.Find("Golf Ball");
 		cameraAnchor = GameObject.Find("Camera Anchor");
 		CalculateDistances();
+		transform.LookAt(golfBall.transform);
 	}
 
 	private void FixedUpdate() {

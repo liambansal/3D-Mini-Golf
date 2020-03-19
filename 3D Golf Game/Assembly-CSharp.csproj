@@ -63,6 +63,7 @@
      <Compile Include="Assets\Scripts\Gameplay\MainCamera.cs" />
      <Compile Include="Assets\Scripts\Gameplay\SceneManagement.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Scoreboard.cs" />
+     <Compile Include="Assets\Scripts\Main Menu\MainMenu.cs" />
      <Compile Include="Assets\Scripts\Main Menu\MenuButtons.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>C:/ct4026-assignment2-liambansal/3D Golf Game/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

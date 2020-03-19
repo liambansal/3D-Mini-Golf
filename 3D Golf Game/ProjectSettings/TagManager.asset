@@ -16,6 +16,7 @@ TagManager:
   - LevelFiveScore
   - LevelSixScore
   - TotalScore
+  - Canvas
   layers:
   - Default
   - TransparentFX

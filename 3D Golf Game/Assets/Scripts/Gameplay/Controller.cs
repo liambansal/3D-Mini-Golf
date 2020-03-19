@@ -9,10 +9,10 @@ public class Controller : MonoBehaviour {
 	private float startTime = 0.0f; // Timestamp of when the player starts inputting to move the golf ball.
 	private float endTime = 0.0f; // Timestamp of when the player stops inputting to move the golf ball.
 	private float minHitForce = 2.0f;
-	private float maxHitForce = 40.0f;
+	private float maxHitForce = 60.0f;
 	private float minimumSpeed = 1.0f;
 
-	private bool moving = false;
+	private bool pressed = false;
 
 	private Vector3 direction = new Vector3(); // The direction in which the golf ball will move.
 
@@ -35,29 +35,30 @@ public class Controller : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (rigidBody.velocity.magnitude == 0.0f || (rigidBody.velocity.magnitude < minimumSpeed)) {
+		if (rigidBody.velocity.magnitude < minimumSpeed) {
 			rigidBody.velocity = Vector3.zero;
-			moving = false;
-			GetComponent<MeshRenderer>().material = defaultMaterial;
-		} else {
-			moving = true;
-			GetComponent<MeshRenderer>().material = null;
 		}
 
-		if (!moving) {
-			if (Input.GetKeyDown(KeyCode.M)) {
+		if (rigidBody.velocity == Vector3.zero) {
+			GetComponent<MeshRenderer>().material = defaultMaterial;
+
+			if (Input.GetKeyDown(KeyCode.Space)) {
 				startTime = Time.time;
+				pressed = true;
 			}
 
-			if (Input.GetKeyUp(KeyCode.M)) {
+			if (pressed && Input.GetKeyUp(KeyCode.Space)) {
+				pressed = false;
 				direction = Camera.main.transform.forward;
 				endTime = Time.time;
 				hitForce *= (endTime - startTime); // Calculates a float 
-				// relative to the length of time the player was inputting to move the golf ball.
+												   // relative to the length of time the player was inputting to move the golf ball.
 				hitForce = Mathf.Clamp(hitForce * 10, minHitForce, maxHitForce);
 				PuttBall();
 				hitForce = power;
 			}
+		} else {
+			GetComponent<MeshRenderer>().material = null;
 		}
 	}
 
