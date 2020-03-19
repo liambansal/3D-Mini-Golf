@@ -1,65 +1,55 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Scoreboard : MonoBehaviour {
-	[SerializeField]
-	private Text puttText = null;
-	[SerializeField]
-	private Text levelOneScore = null;
-	[SerializeField]
-	private Text levelTwoScore = null;
-	[SerializeField]
-	private Text levelThreeScore = null;
-	[SerializeField]
-	private Text levelFourScore = null;
-	[SerializeField]
-	private Text levelFiveScore = null;
-	[SerializeField]
-	private Text levelSixScore = null;
-	[SerializeField]
-	private Text finalScore = null;
+	private int totalScore = 0;
 
-	private int puttCount = 0;
+	private Text currentLevelScoreText = null;
+	private Text totalScoreText = null;
+	
+	private HUD hud = null;
 
-	private float displayTime = 8.0f;
-
-	private SceneManagement sceneManager = null;
-
-	/// <summary>
-	/// Initializes the putt dislpay text and gets the SceneManager script.
-	/// </summary>
 	private void Start() {
-		sceneManager = FindObjectOfType<SceneManagement>();
-		puttText.text = ("Putts: " + puttCount.ToString());
+		hud = FindObjectOfType<HUD>();
+		totalScoreText = GameObject.FindWithTag("TotalScore").GetComponent<Text>();
 	}
 
-	private void Update() {
-		if (gameObject.activeSelf) {
-			displayTime -= Time.deltaTime;
-
-			if (displayTime <= 0.0f) {
-				sceneManager.LoadNextScene();
+	public void UpdateScoreboard() {
+		switch (SceneManager.GetActiveScene().buildIndex) {
+			case 1: {
+				currentLevelScoreText = GameObject.FindWithTag("LevelOneScore").GetComponent<Text>();
+				currentLevelScoreText.text = hud.PuttCount.ToString();
+				break;
+			}
+			case 2: {
+				currentLevelScoreText = GameObject.FindWithTag("LevelTwoScore").GetComponent<Text>();
+				currentLevelScoreText.text = hud.PuttCount.ToString();
+				break;
+			}
+			case 3: {
+				currentLevelScoreText = GameObject.FindWithTag("LevelThreeScore").GetComponent<Text>();
+				currentLevelScoreText.text = hud.PuttCount.ToString();
+				break;
+			}
+			case 4: {
+				currentLevelScoreText = GameObject.FindWithTag("LevelFourScore").GetComponent<Text>();
+				currentLevelScoreText.text = hud.PuttCount.ToString();
+				break;
+			}
+			case 5: {
+				currentLevelScoreText = GameObject.FindWithTag("LevelFiveScore").GetComponent<Text>();
+				currentLevelScoreText.text = hud.PuttCount.ToString();
+				break;
+			}
+			case 6: {
+				currentLevelScoreText = GameObject.FindWithTag("LevelSixScore").GetComponent<Text>();
+				currentLevelScoreText.text = hud.PuttCount.ToString();
+				break;
 			}
 		}
-	}
 
-	/// <summary>
-	/// Adds 1 to the putt counter and updates the display text.
-	/// </summary>
-	internal void IncreasePutts() {
-		++puttCount;
-		puttText.text = ("Putts: " + puttCount.ToString());
-	}
-
-	private void UpdateScores() {
-		levelOneScore.text = puttCount.ToString();
-	} 
-
-	/// <summary>
-	/// Updates the scoreboards score and displays the results.
-	/// </summary>
-	internal void DisplayScoreboard() {
-		UpdateScores();
-		gameObject.SetActive(true);
+		totalScore += hud.PuttCount;
+		totalScoreText.text = totalScore.ToString();
 	}
 }

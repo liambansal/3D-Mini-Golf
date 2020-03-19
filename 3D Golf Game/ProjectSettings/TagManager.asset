@@ -6,6 +6,16 @@ TagManager:
   tags:
   - GolfBall
   - Scoreboard
+  - PuttCounter
+  - SceneManager
+  - HUD
+  - LevelOneScore
+  - LevelTwoScore
+  - LevelThreeScore
+  - LevelFourScore
+  - LevelFiveScore
+  - LevelSixScore
+  - TotalScore
   layers:
   - Default
   - TransparentFX

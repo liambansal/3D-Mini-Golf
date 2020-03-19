@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 286461606}
   m_Layer: 5
   m_Name: Score
-  m_TagString: Untagged
+  m_TagString: LevelOneScore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 371940943}
   m_Layer: 5
   m_Name: Score
-  m_TagString: Untagged
+  m_TagString: LevelThreeScore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -457,7 +457,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 390629001}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Level 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -747,7 +747,7 @@ GameObject:
   - component: {fileID: 979171423}
   m_Layer: 5
   m_Name: Score
-  m_TagString: Untagged
+  m_TagString: LevelFiveScore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -901,7 +901,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1049519120}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Level 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1021,7 +1021,7 @@ GameObject:
   - component: {fileID: 1148639165}
   m_Layer: 5
   m_Name: Score
-  m_TagString: Untagged
+  m_TagString: LevelTwoScore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1096,7 +1096,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1235352259}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Level 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1142,7 +1142,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1240845787
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1182,14 +1182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e78fafec61a18242af57930f45f0864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  puttText: {fileID: 1532727696}
-  levelOneScore: {fileID: 286461606}
-  levelTwoScore: {fileID: 1148639165}
-  levelThreeScore: {fileID: 371940943}
-  levelFourScore: {fileID: 2023210124}
-  levelFiveScore: {fileID: 979171423}
-  levelSixScore: {fileID: 1882725572}
-  finalScore: {fileID: 1374624640}
 --- !u!114 &1240845789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1236,7 +1228,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1281719101}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Level 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1264,6 +1256,55 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1301669245
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1301669246}
+  - component: {fileID: 1301669247}
+  m_Layer: 5
+  m_Name: HUD
+  m_TagString: HUD
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1301669246
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1301669245}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1627939748}
+  m_Father: {fileID: 1527953417}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1301669247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1301669245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 295255b9bfdb2054e988a8980ae63b5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1314888883
 GameObject:
   m_ObjectHideFlags: 0
@@ -1273,7 +1314,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1314888884}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Level 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1314,7 +1355,7 @@ GameObject:
   - component: {fileID: 1374624640}
   m_Layer: 5
   m_Name: Score
-  m_TagString: Untagged
+  m_TagString: TotalScore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1471,6 +1512,7 @@ GameObject:
   - component: {fileID: 1527953416}
   - component: {fileID: 1527953415}
   - component: {fileID: 1527953414}
+  - component: {fileID: 1527953418}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1549,7 +1591,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 1627939748}
+  - {fileID: 1301669246}
   - {fileID: 1240845787}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -1559,6 +1601,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1527953418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527953413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d73cbcabccb53f549912d17a4b2a9f4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1532727694
 GameObject:
   m_ObjectHideFlags: 0
@@ -1726,9 +1780,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1627939748}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Putt Counter
-  m_TagString: Untagged
+  m_TagString: PuttCounter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1740,13 +1794,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1627939747}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1712938053}
   - {fileID: 1532727695}
-  m_Father: {fileID: 1527953417}
+  m_Father: {fileID: 1301669246}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.925}
@@ -1763,7 +1817,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1660945919}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Level 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2023,7 +2077,7 @@ GameObject:
   - component: {fileID: 1882725572}
   m_Layer: 5
   m_Name: Score
-  m_TagString: Untagged
+  m_TagString: LevelSixScore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2102,7 +2156,7 @@ GameObject:
   - component: {fileID: 2023210124}
   m_Layer: 5
   m_Name: Score
-  m_TagString: Untagged
+  m_TagString: LevelFourScore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2177,7 +2231,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2095099964}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Total Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2217,7 +2271,7 @@ GameObject:
   - component: {fileID: 2134673500}
   m_Layer: 0
   m_Name: Scene Manager
-  m_TagString: Untagged
+  m_TagString: SceneManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2319,7 +2373,7 @@ PrefabInstance:
         type: 3}
       propertyPath: scoreboard
       value: 
-      objectReference: {fileID: 1240845788}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 444150c401fff184aa10d40741890ac8, type: 3}
 --- !u!1001 &6741365523893885715

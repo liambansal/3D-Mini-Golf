@@ -9,14 +9,13 @@ public class CameraAnchor : MonoBehaviour {
 	private GameObject golfBall = null;
 
 	/// <summary>
-	/// Finds golfBall in the scene.
+	/// Finds the golf ball GameObject.
 	/// </summary>
 	private void Start() {
 		golfBall = GameObject.Find("Golf Ball");
 	}
 
 	void FixedUpdate() {
-		// Makes the gameObject's forward direction face the golfBall.
 		transform.LookAt(golfBall.transform.position, transform.up);
 
 		if (Input.GetMouseButton(0)) {
@@ -40,9 +39,10 @@ public class CameraAnchor : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Returns a Vector3 for moving the cameraAnchor towards or away from the 
-	/// golfBall.
+	/// Returns a Vector3 for moving the camera anchor towards or away from the 
+	/// golf ball.
 	/// </summary>
+	/// <returns> The route as a Vector3 from the camera anchor to the golf ball. </returns>
 	private Vector3 Zoom() {
 		float zoomSpeed = 8.0f;
 		Vector3 vec1 = (transform.position);
@@ -52,9 +52,8 @@ public class CameraAnchor : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Rotates the cameraAnchor around the golfBall's global y axis.
+	/// Rotates the camera anchor around the golf ball's global y axis.
 	/// </summary>
-	/// <param name="xTranslation"></param>
 	private void RotateAroundGolfBall(float xTranslation) {
 		transform.RotateAround(golfBall.transform.position, Vector3.up, xTranslation);
 	}
