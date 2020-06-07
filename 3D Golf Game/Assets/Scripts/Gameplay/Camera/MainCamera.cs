@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 
 public class MainCamera : MonoBehaviour {
-	private float sensitivity = 1.0f;
+	private const int rotateTouchCount = 1;
+	private const int zoomTouchCount = 2;
+
+	private float sensitivity = 20.0f;
 	/// <summary>
 	/// Holds the value of the mouse-x axis.
 	/// </summary>
@@ -10,13 +13,13 @@ public class MainCamera : MonoBehaviour {
 	/// Holds the value of the mouse-y axis.
 	/// </summary>
 	private float yTranslation = 0.0f;
+	private float touchDistances = 0.0f;
+	private float lastTouchDistances = 0.0f;
 	private float anchorDistanceToGolfBall = 0.0f;
 	private float maxDistanceToAnchor = 0.0f;
 	private float minDistanceToGolfBall = 2.0f;
 	private float maxDistanceToGolfBall = 12.0f;
 
-	private bool canRotate = false;
-	private bool canZoom = true;
 	private string sensitivityString = "Sensitivity";
 
 	private Vector3 ballOffset = new Vector3();
@@ -43,54 +46,59 @@ public class MainCamera : MonoBehaviour {
 	}
 
 	private void FixedUpdate() {
-		if (Input.GetMouseButton(0)) {
-			canRotate = true;
-			canZoom = false;
-		} else {
-			canRotate = false;
-			canZoom = true;
-		}
+		if (golfBall.GetComponent<Rigidbody>().velocity.magnitude == 0) {
+			if (Input.touchCount == rotateTouchCount) {
+				Touch touch = Input.touches[0];
 
-		if (canRotate && (golfBall.GetComponent<Rigidbody>().velocity.magnitude == 0)) {
-			// Checks for change in the mouxe-x/y axis values.
-			if ((Input.GetAxis("Mouse X") > 0) || (Input.GetAxis("Mouse X") < 0)) {
-				xTranslation = (Input.GetAxis("Mouse X") * sensitivity);
-				RotateCamera();
-				cameraAnchor.SendMessage("RotateAroundGolfBall", xTranslation); // Rotates the cameraAnchor 
-				// relative to the camera's rotation around the golfBall.
-				ClampCameraPosition();
-				transform.LookAt(golfBall.transform.position, transform.up); // Makes the camera's forward 
-				// direction point towards the golfBall.
-				CalculateDistances();
+				switch (touch.phase) {
+					case TouchPhase.Moved: {
+						xTranslation = touch.deltaPosition.x / sensitivity;
+						yTranslation = touch.deltaPosition.y / sensitivity;
+						RotateCamera();
+						// Rotates the cameraAnchor relative to the camera's rotation around the golfBall.
+						cameraAnchor.SendMessage("RotateAroundGolfBall", xTranslation);
+						ClampCameraPosition();
+						// Makes the camera's forward direction point towards the golfBall.
+						transform.LookAt(golfBall.transform.position, transform.up);
+						CalculateDistances();
+						break;
+					}
+					default: {
+						break;
+					}
+				}
 			}
 
-			if ((Input.GetAxis("Mouse Y") > 0) || (Input.GetAxis("Mouse Y") < 0)) {
-				yTranslation = (Input.GetAxis("Mouse Y") * sensitivity);
-				RotateCamera();
-				cameraAnchor.SendMessage("RotateAroundGolfBall", xTranslation); // Rotates the cameraAnchor 
-				// relative to the camera's rotation around the golfBall.
-				ClampCameraPosition();
-				transform.LookAt(golfBall.transform.position, transform.up); // Makes the camera's forward 
-				// direction point towards the golfBall.
-				CalculateDistances();
+			if (Input.touchCount == zoomTouchCount) {
+				for (int i = 0; i < zoomTouchCount; ++i) {
+					Touch touch = Input.touches[i];
+
+					switch (touch.phase) {
+						case TouchPhase.Moved: {
+							touchDistances = Vector2.Distance(Input.touches[0].position, Input.touches[1].position);
+
+							if (DistanceToGolfBall() > minDistanceToGolfBall && touchDistances > lastTouchDistances) {
+								transform.position += Zoom();
+								cameraAnchor.SendMessage("ZoomIn", Zoom());
+							} else if (DistanceToGolfBall() < maxDistanceToGolfBall && touchDistances < lastTouchDistances) {
+								transform.position -= Zoom();
+								cameraAnchor.SendMessage("ZoomOut", Zoom());
+							}
+
+							CalculateDistances();
+
+							break;
+						}
+						default: {
+							break;
+						}
+					}
+
+					lastTouchDistances = Vector2.Distance(Input.touches[0].position, Input.touches[1].position);
+				}
 			}
 		} else {
 			MoveCamera();
-		}
-
-		// Check input for zooming in/out.
-		if (canZoom) {
-			if (Input.GetAxis("Mouse ScrollWheel") > 0) {
-				if (DistanceToGolfBall() > minDistanceToGolfBall) {
-					transform.position += Zoom(); // Zooms in.
-					CalculateDistances();
-				}
-			} else if (Input.GetAxis("Mouse ScrollWheel") < 0) {
-				if (DistanceToGolfBall() < maxDistanceToGolfBall) {
-					transform.position -= Zoom(); // Zooms out.
-					CalculateDistances();
-				}
-			}
 		}
 	}
 

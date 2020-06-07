@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public class SettingsScreen : MonoBehaviour {
-	private float cameraSensitivity = 1.0f;
+	private float cameraSensitivity = 20.0f;
 	private string sensitivityString = "Sensitivity";
 
 	public void ChangeSensitivity(float sensitivity) {

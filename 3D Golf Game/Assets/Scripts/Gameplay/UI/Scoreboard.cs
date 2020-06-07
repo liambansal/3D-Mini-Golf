@@ -16,7 +16,7 @@ public class Scoreboard : MonoBehaviour {
 	}
 
 	public void UpdateScoreboard() {
-		switch (SceneManager.GetActiveScene().buildIndex + 1) {
+		switch (SceneManager.GetActiveScene().buildIndex - 1) {
 			case 1: {
 				currentLevelScoreText = GameObject.FindWithTag("LevelOneScore").GetComponent<Text>();
 				currentLevelScoreText.text = hud.PuttCount.ToString();
