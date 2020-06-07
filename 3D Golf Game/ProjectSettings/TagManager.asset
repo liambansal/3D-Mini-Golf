@@ -16,7 +16,8 @@ TagManager:
   - LevelFiveScore
   - LevelSixScore
   - TotalScore
-  - Canvas
+  - Settings
+  - GameplayCanvas
   layers:
   - Default
   - TransparentFX

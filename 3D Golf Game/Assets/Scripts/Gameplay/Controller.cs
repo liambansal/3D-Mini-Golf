@@ -4,58 +4,108 @@ public class Controller : MonoBehaviour {
 	[SerializeField]
 	private Material defaultMaterial = null;
 
-	private float hitForce = 2.0f; // The force applied to move the golf ball.
-	private float power = 2.0f;
-	private float startTime = 0.0f; // Timestamp of when the player starts inputting to move the golf ball.
-	private float endTime = 0.0f; // Timestamp of when the player stops inputting to move the golf ball.
-	private float minHitForce = 2.0f;
-	private float maxHitForce = 60.0f;
-	private float minimumSpeed = 1.0f;
+	/// <summary>
+	/// The maximum number of finger touches allowed to putt the ball.
+	/// </summary>
+	private const int maximumPuttTouches = 1;
 
-	private bool pressed = false;
+	private float defaultHitForce = 0.5f;
+	/// <summary>
+	/// The force applied to move the golf ball.
+	/// </summary>
+	private float hitForce = 0.5f;
+	private float forceMultiplier = 40.0f;
+	/// <summary>
+	/// Timestamp of when the player starts inputting to move the golf ball.
+	/// </summary>
+	private float startTime = 0.0f;
+	/// <summary>
+	/// Timestamp of when the player stops inputting to move the golf ball.
+	/// </summary>
+	private float endTime = 0.0f;
+	private float minHitForce = 0.5f;
+	private float maxHitForce = 80.0f;
+	private float minimumSpeed = 0.1f;
 
-	private Vector3 direction = new Vector3(); // The direction in which the golf ball will move.
+	private float outOfBounds = -3.0f;
 
-	private Rigidbody rigidBody = null; // The golf ball's rigidbody.
+	private bool holding = false;
 
+	/// <summary>
+	/// The direction in which the golf ball will move.
+	/// </summary>
+	private Vector3 direction = new Vector3();
+	/// <summary>
+	/// The position of the golf ball before it was hit.
+	/// </summary>
+	private Vector3 lastPosition = new Vector3();
+
+	/// <summary>
+	/// The golf ball's rigidbody.
+	/// </summary>
+	private Rigidbody golfballRigidBody = null;
 	private HUD hud = null;
 
 	/// <summary>
-	/// Gets the rigidbody of this gameObject.
+	/// Initializes some variables.
 	/// </summary>
 	private void Awake() {
-		rigidBody = GetComponent<Rigidbody>();
-	}
-
-	/// <summary>
-	/// Finds the HUD object.
-	/// </summary>
-	private void Start() {
 		hud = FindObjectOfType<HUD>();
+		golfballRigidBody = GetComponent<Rigidbody>();
+		lastPosition = transform.position;
 	}
 
 	private void Update() {
-		if (rigidBody.velocity.magnitude < minimumSpeed) {
-			rigidBody.velocity = Vector3.zero;
+		if (transform.position.y <= outOfBounds) {
+			golfballRigidBody.position = lastPosition;
+			golfballRigidBody.velocity = Vector3.zero;
 		}
 
-		if (rigidBody.velocity == Vector3.zero) {
+		if (golfballRigidBody.velocity.magnitude < minimumSpeed) {
+			golfballRigidBody.velocity = Vector3.zero;
+		}
+
+		if (golfballRigidBody.velocity == Vector3.zero) {
 			GetComponent<MeshRenderer>().material = defaultMaterial;
 
-			if (Input.GetKeyDown(KeyCode.Space)) {
-				startTime = Time.time;
-				pressed = true;
-			}
+			if (Input.touchCount == maximumPuttTouches) {
+				Touch touch = Input.touches[0];
 
-			if (pressed && Input.GetKeyUp(KeyCode.Space)) {
-				pressed = false;
-				direction = Camera.main.transform.forward;
-				endTime = Time.time;
-				hitForce *= (endTime - startTime); // Calculates a float 
-												   // relative to the length of time the player was inputting to move the golf ball.
-				hitForce = Mathf.Clamp(hitForce * 10, minHitForce, maxHitForce);
-				PuttBall();
-				hitForce = power;
+				switch (touch.phase) {
+					case TouchPhase.Began: {
+						startTime = Time.time;
+
+						if (touch.tapCount >= 2) {
+							holding = true;
+						}
+
+						break;
+					}
+					case TouchPhase.Ended: {
+						if (holding) {
+							holding = false;
+							direction = Camera.main.transform.forward;
+							endTime = Time.time;
+							// Calculates a float relative to the length of time the player 
+							// was inputting to move the golf ball.
+							hitForce *= (endTime - startTime);
+							hitForce = Mathf.Clamp(hitForce * forceMultiplier, minHitForce, maxHitForce);
+							PuttBall();
+							hitForce = defaultHitForce;
+						}
+
+						break;
+					}
+					case TouchPhase.Canceled: {
+						holding = false;
+						break;
+					}
+					default: {
+						break;
+					}
+				}
+			} else {
+				holding = false; 
 			}
 		} else {
 			GetComponent<MeshRenderer>().material = null;
@@ -68,7 +118,8 @@ public class Controller : MonoBehaviour {
 	/// a call to update the putt count text.
 	/// </summary>
 	private void PuttBall() {
-		rigidBody.AddForce((direction * hitForce), ForceMode.Impulse);
+		lastPosition = golfballRigidBody.position;
+		golfballRigidBody.AddForce((direction * hitForce), ForceMode.Impulse);
 		hud.UpdatePuttCounter(1);
 	}
 }
