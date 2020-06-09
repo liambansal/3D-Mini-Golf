@@ -19,18 +19,13 @@ public class HUD : MonoBehaviour {
 		puttCountText.text = ("Putts: " + PuttCount.ToString());
 	}
 
-	/// <summary>
-	/// Increases/resets the putt count value/text.
-	/// </summary>
-	/// <param name="score"> Negative values reset the putt counter and positive values increase
-	/// the putt counter by one. </param>
-	public void UpdatePuttCounter(int score) {
-		if (score == 0) {
-			PuttCount = score;
-		} else {
-			++PuttCount;
-		}
+	public void IncreasePuttCounter() {
+		++PuttCount;
+		puttCountText.text = ("Putts: " + PuttCount.ToString());
+	}
 
+	public void ResetPuttCounter() {
+		PuttCount = 0;
 		puttCountText.text = ("Putts: " + PuttCount.ToString());
 	}
 }

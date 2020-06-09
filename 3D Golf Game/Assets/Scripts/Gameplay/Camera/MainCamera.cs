@@ -30,7 +30,6 @@ public class MainCamera : MonoBehaviour {
 	/// </summary>
 	private float touchDistance = 0.0f;
 	private float lastTouchDistance = 0.0f;
-	private float anchorDistanceToGolfBall = 0.0f;
 	private float maximumDistanceToAnchor = 0.0f;
 
 	private const string sensitivityString = "Sensitivity";
@@ -163,7 +162,7 @@ public class MainCamera : MonoBehaviour {
 			if (Vector3.Distance(transform.position, cameraAnchor.transform.position) > maximumDistanceToAnchor) {
 				// Sets the camera's position to be vertically alligned with the golf ball's position.
 				transform.position = new Vector3(golfBallRigidbody.position.x, 
-					golfBallRigidbody.position.y + anchorDistanceToGolfBall, 
+					golfBallRigidbody.position.y + cameraAnchor.GetComponent<CameraAnchor>().GolfBallDistance, 
 					golfBallRigidbody.position.z);
 			}
 		} else if (transform.position.y < cameraAnchor.transform.position.y) {
@@ -179,12 +178,11 @@ public class MainCamera : MonoBehaviour {
 	/// </summary>
 	private void CalculateDistances() {
 		ballOffset = transform.position - golfBallRigidbody.position;
-		anchorDistanceToGolfBall = Vector3.Distance(cameraAnchor.transform.position, golfBallRigidbody.position);
 		// Finds the maximum possible distance between the camera and camera anchor without the
 		// camera rotating past the golf ball's global y axis.
 		maximumDistanceToAnchor = Vector3.Distance(cameraAnchor.transform.position,
 		(new Vector3(golfBallRigidbody.position.x,
-			golfBallRigidbody.position.y + anchorDistanceToGolfBall,
+			golfBallRigidbody.position.y + cameraAnchor.GetComponent<CameraAnchor>().GolfBallDistance,
 			golfBallRigidbody.position.z)));
 	}
 

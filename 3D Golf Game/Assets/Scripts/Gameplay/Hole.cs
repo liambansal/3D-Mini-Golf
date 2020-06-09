@@ -34,7 +34,7 @@ public class Hole : MonoBehaviour {
 			scoreboardDisplayTime -= Time.deltaTime;
 
 			if (scoreboardDisplayTime <= 0.0f) {
-				hud.UpdatePuttCounter(0);
+				hud.ResetPuttCounter();
 				sceneManager.LoadNextScene();
 				scoreboardDisplayTime = 0.0f;
 			}

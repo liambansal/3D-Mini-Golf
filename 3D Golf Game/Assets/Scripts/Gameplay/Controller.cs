@@ -95,7 +95,7 @@ public class Controller : MonoBehaviour {
 								maximumPuttForce);
 							lastPosition = golfBallRigidBody.position;
 							PuttGolfBall();
-							hud.UpdatePuttCounter(1);
+							hud.IncreasePuttCounter();
 						}
 
 						break;
