@@ -64,13 +64,20 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Gameplay\Camera\CameraAnchor.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Camera\MainCamera.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Cannon.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Controller.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Firefly.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Hole.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\Obstacles\SpinCross.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Obstacles\Spin.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Obstacles\Turntable.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Power Up\ExplosivePowerUp.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Power Up\PowerUpController.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\PressurePlate.cs" />
     <Compile Include="Assets\Scripts\Gameplay\SceneManagement.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\UI\Canvas.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Tutorial.cs" />
     <Compile Include="Assets\Scripts\Gameplay\UI\HUD.cs" />
     <Compile Include="Assets\Scripts\Gameplay\UI\Scoreboard.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\UI\UICanvas.cs" />
     <Compile Include="Assets\Scripts\Menus\Main Menu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Menus\Main Menu\MenuButtons.cs" />
     <Compile Include="Assets\Scripts\Menus\Main Menu\SettingsScreen.cs" />

@@ -9,15 +9,15 @@ TagManager:
   - PuttCounter
   - SceneManager
   - HUD
-  - LevelOneScore
-  - LevelTwoScore
-  - LevelThreeScore
-  - LevelFourScore
-  - LevelFiveScore
-  - LevelSixScore
   - TotalScore
   - Settings
   - GameplayCanvas
+  - CameraAnchor
+  - Level1Score
+  - Level2Score
+  - Level3Score
+  - Box
+  - PowerBar
   layers:
   - Default
   - TransparentFX

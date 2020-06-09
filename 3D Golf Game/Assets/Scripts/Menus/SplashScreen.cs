@@ -2,7 +2,9 @@
 using UnityEngine.SceneManagement;
 
 public class SplashScreen : MonoBehaviour {
+	private const string mainMenuName = "Main Menu";
+
 	private void LoadMainMenu() {
-		SceneManager.LoadScene("Main Menu", LoadSceneMode.Single);
+		SceneManager.LoadScene(mainMenuName, LoadSceneMode.Single);
 	}
 }

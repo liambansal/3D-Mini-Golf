@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Provides functionality for the settings screen's buttons.
+/// </summary>
 public class SettingsScreen : MonoBehaviour {
 	private float cameraSensitivity = 20.0f;
-	private string sensitivityString = "Sensitivity";
+	private const string sensitivityString = "Sensitivity";
 
-	public void ChangeSensitivity(float sensitivity) {
+	private void ChangeSensitivity(float sensitivity) {
 		cameraSensitivity = sensitivity;
 	}
 
@@ -12,6 +15,9 @@ public class SettingsScreen : MonoBehaviour {
 		PlayerPrefs.SetFloat(sensitivityString, cameraSensitivity);
 	}
 
+	/// <summary>
+	/// Goes back to the main menu.
+	/// </summary>
 	private void Back() {
 		gameObject.SetActive(false);
 	}

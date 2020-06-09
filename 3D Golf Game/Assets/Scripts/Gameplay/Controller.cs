@@ -1,82 +1,85 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
+/// <summary>
+/// Handles touch input to putt the golf ball and update the power bar.
+/// </summary>
 public class Controller : MonoBehaviour {
-	[SerializeField]
-	private Material defaultMaterial = null;
-
 	/// <summary>
 	/// The maximum number of finger touches allowed to putt the ball.
 	/// </summary>
 	private const int maximumPuttTouches = 1;
 
-	private float defaultHitForce = 0.5f;
+	private const float defaultPuttForce = 1.0f;
+	private const float minimumPuttForce = 1.0f;
+	private const float maximumPuttForce = 80.0f;
+	private const float minimumSpeed = 0.15f;
 	/// <summary>
-	/// The force applied to move the golf ball.
+	/// Speeds up the time for holding a finger down.
 	/// </summary>
-	private float hitForce = 0.5f;
-	private float forceMultiplier = 40.0f;
+	private const float timeMultiplier = 22.0f;
 	/// <summary>
-	/// Timestamp of when the player starts inputting to move the golf ball.
+	/// The y position a golf ball must pass for it to be reset to it's last position.
 	/// </summary>
-	private float startTime = 0.0f;
+	private const float outOfBounds = -3.0f;
+	private float puttForce = 0.0f;
 	/// <summary>
-	/// Timestamp of when the player stops inputting to move the golf ball.
+	/// Length of time the player holds their finger down on the screen.
 	/// </summary>
-	private float endTime = 0.0f;
-	private float minHitForce = 0.5f;
-	private float maxHitForce = 80.0f;
-	private float minimumSpeed = 0.1f;
+	private float holdLength = 0.0f;
 
-	private float outOfBounds = -3.0f;
-
+	/// <summary>
+	/// Is the player holding down a finger on the screen.
+	/// </summary>
 	private bool holding = false;
 
-	/// <summary>
-	/// The direction in which the golf ball will move.
-	/// </summary>
-	private Vector3 direction = new Vector3();
+	private Vector3 moveDirection = new Vector3();
 	/// <summary>
 	/// The position of the golf ball before it was hit.
 	/// </summary>
 	private Vector3 lastPosition = new Vector3();
+	private Color stationaryColour = Color.white;
+	private Color movingColour = Color.gray;
 
-	/// <summary>
-	/// The golf ball's rigidbody.
-	/// </summary>
-	private Rigidbody golfballRigidBody = null;
+	private Rigidbody golfBallRigidBody = null;
 	private HUD hud = null;
+	private Slider powerBar = null;
+	private GameObject mainCamera = null;
+	private GameObject cameraAnchor = null;
+	private MeshRenderer golfBallMeshRenderer = null;
 
 	/// <summary>
-	/// Initializes some variables.
+	/// Assigns some unassigned variables.
 	/// </summary>
 	private void Awake() {
 		hud = FindObjectOfType<HUD>();
-		golfballRigidBody = GetComponent<Rigidbody>();
+		const string powerBarTag = "PowerBar";
+		powerBar = GameObject.FindGameObjectWithTag(powerBarTag).GetComponent<Slider>();
+		const string mainCameraTag = "MainCamera";
+		mainCamera = GameObject.FindGameObjectWithTag(mainCameraTag);
+		const string CameraAnchorTag = "CameraAnchor";
+		cameraAnchor = GameObject.FindGameObjectWithTag(CameraAnchorTag);
+		golfBallRigidBody = GetComponent<Rigidbody>();
+		golfBallMeshRenderer = GetComponent<MeshRenderer>();
 		lastPosition = transform.position;
 	}
 
+	/// <summary>
+	/// Handles input to putt the golf ball, setting it's material colour and updating the power bar.
+	/// </summary>
 	private void Update() {
-		if (transform.position.y <= outOfBounds) {
-			golfballRigidBody.position = lastPosition;
-			golfballRigidBody.velocity = Vector3.zero;
-		}
-
-		if (golfballRigidBody.velocity.magnitude < minimumSpeed) {
-			golfballRigidBody.velocity = Vector3.zero;
-		}
-
-		if (golfballRigidBody.velocity == Vector3.zero) {
-			GetComponent<MeshRenderer>().material = defaultMaterial;
+		if (golfBallRigidBody.velocity.magnitude < minimumSpeed) {
+			golfBallMeshRenderer.material.color = stationaryColour;
 
 			if (Input.touchCount == maximumPuttTouches) {
 				Touch touch = Input.touches[0];
 
 				switch (touch.phase) {
 					case TouchPhase.Began: {
-						startTime = Time.time;
-
+						// Makes sure the player double taps before putting.
 						if (touch.tapCount >= 2) {
 							holding = true;
+							holdLength = 0.0f;
 						}
 
 						break;
@@ -84,14 +87,15 @@ public class Controller : MonoBehaviour {
 					case TouchPhase.Ended: {
 						if (holding) {
 							holding = false;
-							direction = Camera.main.transform.forward;
-							endTime = Time.time;
-							// Calculates a float relative to the length of time the player 
-							// was inputting to move the golf ball.
-							hitForce *= (endTime - startTime);
-							hitForce = Mathf.Clamp(hitForce * forceMultiplier, minHitForce, maxHitForce);
-							PuttBall();
-							hitForce = defaultHitForce;
+							moveDirection = Camera.main.transform.forward;
+							// Exaggerates a float that is relative to the length of time the
+							// player was holding a finger on the screen and clamps the value.
+							puttForce = Mathf.Clamp(holdLength * timeMultiplier,
+								minimumPuttForce,
+								maximumPuttForce);
+							lastPosition = golfBallRigidBody.position;
+							PuttGolfBall();
+							hud.UpdatePuttCounter(1);
 						}
 
 						break;
@@ -104,22 +108,41 @@ public class Controller : MonoBehaviour {
 						break;
 					}
 				}
+
+				if (holding) {
+					holdLength += Time.deltaTime;
+					powerBar.value = holdLength * timeMultiplier;
+				}
 			} else {
-				holding = false; 
+				holding = false;
+				holdLength = 0.0f;
 			}
 		} else {
-			GetComponent<MeshRenderer>().material = null;
+			golfBallMeshRenderer.material.color = movingColour;
 		}
 	}
 
 	/// <summary>
-	/// Adds an instant force impulse to the rigidbody of the golf ball which 
-	/// causes it to move along the main camera's forward direction and makes 
-	/// a call to update the putt count text.
+	/// Stops the golf ball's movement when necessary.
 	/// </summary>
-	private void PuttBall() {
-		lastPosition = golfballRigidBody.position;
-		golfballRigidBody.AddForce((direction * hitForce), ForceMode.Impulse);
-		hud.UpdatePuttCounter(1);
+	private void FixedUpdate() {
+		if (transform.position.y <= outOfBounds) {
+			// Reset the golf ball's position to its last valid position.
+			golfBallRigidBody.position = lastPosition;
+			golfBallRigidBody.velocity = Vector3.zero;
+			golfBallRigidBody.rotation = Quaternion.identity;
+			mainCamera.SendMessage("MoveCamera");
+			cameraAnchor.SendMessage("MoveAnchor");
+		}
+
+		if (golfBallRigidBody.velocity.magnitude < minimumSpeed) {
+			// Stops the golf ball's movement after reaching it's minimum speed.
+			golfBallRigidBody.velocity = Vector3.zero;
+			golfBallRigidBody.rotation = Quaternion.identity;
+		}
+	}
+
+	private void PuttGolfBall() {
+		golfBallRigidBody.AddForce(moveDirection * puttForce, ForceMode.Impulse);
 	}
 }

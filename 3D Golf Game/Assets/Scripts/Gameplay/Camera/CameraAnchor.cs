@@ -1,41 +1,67 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Positions the camera's anchor relative to the golf ball's position to help clamp the camera's position.
+/// </summary>
 public class CameraAnchor : MonoBehaviour {
-	private float minDistanceToGolfBall = 2.0f;
-	private float maxDistanceToGolfBall = 12.0f;
-	private GameObject golfBall = null;
+	private const float minimumDistanceToGolfBall = 2.0f;
+	private const float maximumDistanceToGolfBall = 12.0f;
+	private const float minimumGolfBallSpeed = 0.15f;
+	private const string golfBallTag = "GolfBall";
+	private Vector3 ballOffset = new Vector3();
+	private Rigidbody golfBallRigidbody = null;
 
 	/// <summary>
-	/// Finds the golf ball GameObject.
+	/// Gets the golf ball GameObject's rigidbody and offset position from it.
 	/// </summary>
-	private void Start() {
-		golfBall = GameObject.Find("Golf Ball");
+	private void Awake() {
+		golfBallRigidbody = GameObject.FindGameObjectWithTag(golfBallTag).GetComponent<Rigidbody>();
+		ballOffset = transform.position - golfBallRigidbody.position;
 	}
 
-	void FixedUpdate() {
-		transform.LookAt(golfBall.transform.position, transform.up);
-	}
-
-	private void ZoomIn(Vector3 zoomDirection) {
-		if (DistanceToGolfBall() > minDistanceToGolfBall) {
-			transform.position += zoomDirection;
-		}
-	}
-
-	private void ZoomOut(Vector3 zoomDirection) {
-		if (DistanceToGolfBall() < maxDistanceToGolfBall) {
-			transform.position -= zoomDirection;
+	/// <summary>
+	/// Moves the anchor to follow the golf ball when it's moving.
+	/// </summary>
+	private void Update() {
+		if (golfBallRigidbody.velocity != Vector3.zero) {
+			MoveAnchor();
 		}
 	}
 
 	/// <summary>
-	/// Rotates the camera anchor around the golf ball's global y axis.
+	/// Forces the camera anchor to face the golf ball and calculate the difference in positions.
 	/// </summary>
+	private void FixedUpdate() {
+		if (golfBallRigidbody.velocity.magnitude <= minimumGolfBallSpeed) {
+			transform.LookAt(golfBallRigidbody.position, transform.up);
+			ballOffset = transform.position - golfBallRigidbody.position;
+		}
+	}
+
+	/// <summary>
+	/// Moves the camera anchor towards the golf ball.
+	/// </summary>
+	private void MoveAnchor() {
+		transform.position = golfBallRigidbody.position + ballOffset;
+	}
+
+	private void MoveTowardsGolfBall(Vector3 moveDirection) {
+		if (DistanceToGolfBall() > minimumDistanceToGolfBall) {
+			transform.position += moveDirection;
+		}
+	}
+
+	private void MoveAwayFromGolfBall(Vector3 moveDirection) {
+		if (DistanceToGolfBall() < maximumDistanceToGolfBall) {
+			transform.position -= moveDirection;
+		}
+	}
+
 	private void RotateAroundGolfBall(float xTranslation) {
-		transform.RotateAround(golfBall.transform.position, Vector3.up, xTranslation);
+		transform.RotateAround(golfBallRigidbody.position, Vector3.up, xTranslation);
 	}
 
 	private float DistanceToGolfBall() {
-		return Vector3.Distance(transform.position, golfBall.transform.position);
+		return Vector3.Distance(transform.position, golfBallRigidbody.position);
 	}
 }

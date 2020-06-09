@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Clears PlayerPrefs and un-destroyed level gameObject's when in the main menu.
+/// </summary>
 public class MainMenu : MonoBehaviour {
 	/// <summary>
 	/// Deletes all the player preferences.

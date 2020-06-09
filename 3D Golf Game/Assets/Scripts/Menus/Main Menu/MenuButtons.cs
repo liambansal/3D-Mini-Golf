@@ -4,12 +4,18 @@ using UnityEngine.SceneManagement;
 public class MenuButtons : MonoBehaviour {
 	[SerializeField]
 	private GameObject settingsScreen = null;
+	private const string levelOneName = "Level 1";
+	private const string tutorialName = "Tutorial";
 
-	public void PlayGame() {
-		SceneManager.LoadScene("Level 1", LoadSceneMode.Single);
+	private void PlayGame() {
+		SceneManager.LoadScene(levelOneName, LoadSceneMode.Single);
 	}
 
-	public void ToggleSettings() {
+	private void LoadTutorial() {
+		SceneManager.LoadScene(tutorialName, LoadSceneMode.Single);
+	}
+
+	private void ToggleSettings() {
 		if (settingsScreen.activeInHierarchy) {
 			settingsScreen.SetActive(false);
 		} else {
@@ -17,7 +23,7 @@ public class MenuButtons : MonoBehaviour {
 		}
 	}
 
-	public void QuitGame() {
+	private void QuitGame() {
 		Application.Quit();
 	}
 }
