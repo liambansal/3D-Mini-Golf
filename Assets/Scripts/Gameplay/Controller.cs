@@ -21,7 +21,7 @@ public class Controller : MonoBehaviour {
 	/// <summary>
 	/// The y position a golf ball must pass for it to be reset to it's last position.
 	/// </summary>
-	private const float outOfBounds = -3.0f;
+	private const float outOfBounds = -2.0f;
 	private float puttForce = 0.0f;
 	/// <summary>
 	/// Length of time the player holds their finger down on the screen.
